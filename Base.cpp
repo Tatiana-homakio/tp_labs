@@ -1,19 +1,19 @@
-#include "lab_1_Base.h"
+#include "Base.h"
 
 Base::Base() : id(0) {
-    std::cout << "[Base] Конструктор по умолчанию\n";
+    std::cout << "[Base] Default constructor\n";
 }
 
 Base::Base(int id) : id(id) {
-    std::cout << "[Base] Конструктор с параметрами (id=" << id << ")\n";
+    std::cout << "[Base] Param constructor (id=" << id << ")\n";
 }
 
 Base::Base(const Base& other) : id(other.id) {
-    std::cout << "[Base] Конструктор копирования (id=" << id << ")\n";
+    std::cout << "[Base] Copy constructor (id=" << id << ")\n";
 }
 
 Base::~Base() {
-    std::cout << "[Base] Деструктор (id=" << id << ")\n";
+    std::cout << "[Base] Destructor (id=" << id << ")\n";
 }
 
 int Base::getId() const { return id; }
