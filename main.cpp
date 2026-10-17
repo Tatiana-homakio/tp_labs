@@ -66,8 +66,10 @@ int main() {
                   << "3. Show object by index\n"
                   << "4. Delete object by index\n"
                   << "5. Edit object by index\n"
-                  << "6. Clear container\n"
-                  << "7. Show container size\n"
+                  << "6. Save to file\n"
+                  << "7. Load from file\n"
+                  << "8. Clear container\n"
+                  << "9. Show container size\n"
                   << "0. Exit\n"
                   << "Your choice: ";
         std::cin >> choice;
@@ -85,8 +87,20 @@ int main() {
             }
             case 4: deleteObjectMenu(keeper); break;
             case 5: editObjectMenu(keeper); break;
-            case 6: keeper.clear(); std::cout << "Cleared.\n"; break;
-            case 7: std::cout << "Size: " << keeper.getSize()
+            case 6: {
+                std::cout << "Enter filename to save (e.g., data.txt): ";
+                std::string fname; std::cin >> fname;
+                keeper.saveToFile(fname);
+                break;
+            }
+            case 7: {
+                std::cout << "Enter filename to load (e.g., data.txt): ";
+                std::string fname; std::cin >> fname;
+                keeper.loadFromFile(fname);
+                break;
+            }
+            case 8: keeper.clear(); std::cout << "Cleared.\n"; break;
+            case 9: std::cout << "Size: " << keeper.getSize()
                              << ", capacity: " << keeper.getCapacity() << "\n"; break;
             case 0: std::cout << "Exit.\n"; break;
             default: std::cout << "Wrong menu item.\n";
