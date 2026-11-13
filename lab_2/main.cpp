@@ -1,4 +1,5 @@
 #include "OrderArray.h"
+#include "TextProcessor.h"
 #include <iostream>
 #include <string>
 #include <limits>
@@ -14,7 +15,7 @@ void printMenu() {
               << " 4. Show all Orders\n"
               << " 5. Sort by payer account\n"
               << " 6. Total amount by payer account\n"
-              << " 7. File/string streams (stub for now)\n"
+              << " 7. File/string streams (process text file)\n"
               << " 0. Exit\n"
               << "==========================\n"
               << "Choice: ";
@@ -102,10 +103,14 @@ int main() {
                 break;
             }
 
-            // ---------- 7. Заглушка (реализуем в День 3) ----------
-            case 7:
-                std::cout << "(Will be implemented on Day 3)\n";
+            // ---------- 7. Файловые/строковые потоки ----------
+            case 7: {
+                std::string fname;
+                std::cout << "File path: ";
+                std::getline(std::cin, fname);
+                TextProcessor::processFile(fname);
                 break;
+            }
 
             // ---------- 0. Выход ----------
             case 0:
@@ -124,6 +129,9 @@ int main() {
         }
         catch (const IndexOutOfRangeException& e) {
             std::cout << "Index error: " << e.what() << "\n";
+        }
+        catch (const FileOpenException& e) {
+            std::cout << "File error: " << e.what() << "\n";
         }
         catch (const std::exception& e) {
             std::cout << "Error: " << e.what() << "\n";
