@@ -1,48 +1,40 @@
 #include "Order.h"
 
-// ============================================================
-//  Конструктор по умолчанию
-// ============================================================
+using namespace std;   
+
+// Конструктор по умолчанию: пустые счета и нулевая сумма
 Order::Order()
     : payerAccount(""), receiverAccount(""), amount(0.0) {
-    std::cout << "[Order] Default constructor called\n";
+    cout << "[Order] Default constructor called\n";
 }
 
-// ============================================================
-//  Конструктор с параметрами
-// ============================================================
-Order::Order(const std::string& payer,
-             const std::string& receiver,
+// Конструктор с параметрами: проверяет, что сумма не отрицательная
+Order::Order(const string& payer,
+             const string& receiver,
              double amount)
     : payerAccount(payer), receiverAccount(receiver), amount(amount) {
-    std::cout << "[Order] Parameterized constructor called\n";
-    if (amount < 0)
+    cout << "[Order] Parameterized constructor called\n";
+    if (amount < 0)                                // отрицательная сумма — ошибка
         throw InvalidAccountException("Amount cannot be negative");
 }
 
-// ============================================================
-//  Конструктор копирования
-// ============================================================
+// Конструктор копирования: поэлементно копирует поля
 Order::Order(const Order& other)
     : payerAccount(other.payerAccount),
       receiverAccount(other.receiverAccount),
       amount(other.amount) {
-    std::cout << "[Order] Copy constructor called\n";
+    cout << "[Order] Copy constructor called\n";
 }
 
-// ============================================================
-//  Деструктор
-// ============================================================
+// Деструктор: выводит сообщение об уничтожении объекта
 Order::~Order() {
-    std::cout << "[Order] Destructor called (payer=" << payerAccount << ")\n";
+    cout << "[Order] Destructor called (payer=" << payerAccount << ")\n";
 }
 
-// ============================================================
-//  Оператор присваивания
-// ============================================================
+// Оператор присваивания: копирует поля, защищается от самоприсваивания
 Order& Order::operator=(const Order& other) {
-    std::cout << "[Order] operator= called\n";
-    if (this != &other) {
+    cout << "[Order] operator= called\n";
+    if (this != &other) {                          // проверка на самоприсваивание
         payerAccount    = other.payerAccount;
         receiverAccount = other.receiverAccount;
         amount          = other.amount;
@@ -50,34 +42,30 @@ Order& Order::operator=(const Order& other) {
     return *this;
 }
 
-// ============================================================
-//  operator<<  — вывод объекта в поток
-// ============================================================
-std::ostream& operator<<(std::ostream& os, const Order& o) {
+// Вывод заказа в поток в одну строку
+ostream& operator<<(ostream& os, const Order& o) {
     os << "Payer: " << o.payerAccount
        << " | Receiver: " << o.receiverAccount
        << " | Amount: " << o.amount << " RUB";
     return os;
 }
 
-// ============================================================
-//  operator>>  — ввод объекта из потока
-// ============================================================
-std::istream& operator>>(std::istream& is, Order& o) {
-    std::string p, r;
+// Ввод заказа с клавиатуры; сумма проверяется на отрицательность
+istream& operator>>(istream& is, Order& o) {
+    string p, r;
     double a;
 
-    std::cout << "  Payer account: ";
-    std::getline(is, p);
+    cout << "  Payer account: ";
+    getline(is, p);                                // читаем строку до '\n'
 
-    std::cout << "  Receiver account: ";
-    std::getline(is, r);
+    cout << "  Receiver account: ";
+    getline(is, r);
 
-    std::cout << "  Amount (RUB): ";
-    is >> a;
-    is.ignore(10000, '\n');
+    cout << "  Amount (RUB): ";
+    is >> a;                                       // читаем число
+    is.ignore(10000, '\n');                        // убираем остаток строки
 
-    if (a < 0)
+    if (a < 0)                                     // отрицательная сумма — ошибка
         throw InvalidAccountException("Amount cannot be negative");
 
     o.payerAccount    = p;
@@ -86,28 +74,21 @@ std::istream& operator>>(std::istream& is, Order& o) {
     return is;
 }
 
-// ============================================================
-//  set-функции
-// ============================================================
-void Order::setPayerAccount(const std::string& v)    { payerAccount = v; }
-void Order::setReceiverAccount(const std::string& v) { receiverAccount = v; }
+void Order::setPayerAccount(const string& v)    { payerAccount = v; }
+void Order::setReceiverAccount(const string& v) { receiverAccount = v; }
 
+// Сеттер суммы с проверкой
 void Order::setAmount(double v) {
-    if (v < 0)
+    if (v < 0)                                     // отрицательная сумма запрещена
         throw InvalidAccountException("Amount cannot be negative");
     amount = v;
 }
 
-// ============================================================
-//  get-функции
-// ============================================================
-const std::string& Order::getPayerAccount() const    { return payerAccount; }
-const std::string& Order::getReceiverAccount() const { return receiverAccount; }
-double Order::getAmount() const                      { return amount; }
+const string& Order::getPayerAccount() const    { return payerAccount; }
+const string& Order::getReceiverAccount() const { return receiverAccount; }
+double Order::getAmount() const                 { return amount; }
 
-// ============================================================
-//  Проверка корректности
-// ============================================================
+// Объект считается корректным, если оба счёта непустые
 bool Order::isValid() const {
     return !payerAccount.empty() && !receiverAccount.empty();
 }

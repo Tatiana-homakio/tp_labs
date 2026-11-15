@@ -4,62 +4,49 @@
 #include "Order.h"
 #include <stdexcept>
 
-// ============================================================
-//  Исключение: массив пуст
-// ============================================================
+// Исключение: массив пуст
 class EmptyArrayException : public std::runtime_error {
 public:
     explicit EmptyArrayException(const std::string& m) : std::runtime_error(m) {}
 };
 
-// ============================================================
-//  Исключение: неверный индекс
-// ============================================================
+// Исключение: неверный индекс
 class IndexOutOfRangeException : public std::runtime_error {
 public:
     explicit IndexOutOfRangeException(const std::string& m) : std::runtime_error(m) {}
 };
 
-// ============================================================
-//  OrderArray — динамический массив объектов Order
-//  (свой, без std::vector)
-// ============================================================
+// Динамический массив объектов Order (свой, без std::vector)
 class OrderArray {
 private:
-    Order* data;      // динамический массив
-    int    size;      // сколько элементов сейчас
-    int    capacity;  // сколько выделено
+    Order* data;                                    // динамический массив
+    int    size;                                    // сколько элементов сейчас
+    int    capacity;                                // сколько выделено памяти
 
-    void resize(int newCap);  // расширение массива
+    void resize(int newCap);                        // расширение массива
 
 public:
-    // ---------- Конструктор / деструктор ----------
     OrderArray();
     ~OrderArray();
 
-    // Запрет копирования (массив владеет памятью)
-    OrderArray(const OrderArray&) = delete;
+    OrderArray(const OrderArray&) = delete;         // копирование запрещено
     OrderArray& operator=(const OrderArray&) = delete;
 
-    // ---------- get ----------
     int getSize() const     { return size; }
     int getCapacity() const { return capacity; }
 
-    // ---------- Основные операции ----------
-    void add(const Order& o, int position = -1);  // -1 => в конец
+    void add(const Order& o, int position = -1);    // -1 => в конец
     void remove(int index);
     void edit(int index, const Order& o);
 
     Order&       at(int index);
     const Order& at(int index) const;
 
-    // ---------- Сортировка и поиск ----------
-    void   sortByPayerAccount();
+    void   sortByPayerAccount();                    // сортировка вставками
     double totalByPayer(const std::string& payer) const;
     bool   hasPayer(const std::string& payer) const;
 
-    // ---------- Вывод ----------
     void printAll() const;
 };
 
-#endif // ORDERARRAY_H
+#endif

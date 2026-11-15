@@ -2,139 +2,115 @@
 #include "TextProcessor.h"
 #include <iostream>
 #include <string>
-#include <limits>
 
-// ============================================================
-//  Печать меню
-// ============================================================
+using namespace std;   
+
+// Печатает главное меню программы
 void printMenu() {
-    std::cout << "\n========== MENU ==========\n"
-              << " 1. Add Order\n"
-              << " 2. Remove Order by index\n"
-              << " 3. Edit Order by index\n"
-              << " 4. Show all Orders\n"
-              << " 5. Sort by payer account\n"
-              << " 6. Total amount by payer account\n"
-              << " 7. File/string streams (process text file)\n"
-              << " 0. Exit\n"
-              << "==========================\n"
-              << "Choice: ";
+    cout << "\n========== MENU ==========\n"
+         << " 1. Add Order\n"
+         << " 2. Remove Order by index\n"
+         << " 3. Edit Order by index\n"
+         << " 4. Show all Orders\n"
+         << " 5. Sort by payer account\n"
+         << " 6. Total amount by payer account\n"
+         << " 7. File/string streams (process text file)\n"
+         << " 0. Exit\n"
+         << "==========================\n"
+         << "Choice: ";
 }
 
-// ============================================================
-//  Аккуратный ввод целого числа
-// ============================================================
-int readInt(const std::string& prompt) {
+// Читает целое число с клавиатуры; при ошибке просит повторить
+int readInt(const string& prompt) {
     int v;
     while (true) {
-        std::cout << prompt;
-        if (std::cin >> v) {
-            std::cin.ignore(10000, '\n');
+        cout << prompt;                            // выводим подсказку
+        if (cin >> v) {                            // пытаемся прочитать число
+            cin.ignore(10000, '\n');               // очищаем буфер до конца строки
             return v;
         }
-        std::cin.clear();
-        std::cin.ignore(10000, '\n');
-        std::cout << "Error: please enter a number.\n";
+        cin.clear();                               // сбрасываем флаг ошибки потока
+        cin.ignore(10000, '\n');                   // выбрасываем некорректный ввод
+        cout << "Error: please enter a number.\n";
     }
 }
 
-// ============================================================
-//  main
-// ============================================================
 int main() {
-    OrderArray arr;
-    std::cout << "Lab 2, variant 20 (ORDER)\n";
+    OrderArray arr;                                // создаём массив заказов
+    cout << "Lab 2, variant 20 (ORDER)\n";
 
     while (true) {
         printMenu();
-        int choice = readInt("");
+        int choice = readInt("");                  // получаем пункт меню
 
         try {
             switch (choice) {
-
-            // ---------- 1. Добавить ----------
-            case 1: {
+            case 1: {                              // добавить заказ
                 Order o;
-                std::cin >> o;
+                cin >> o;                          // ввод полей заказа
                 int pos = readInt("Position (-1 = append): ");
                 arr.add(o, pos);
                 break;
             }
-
-            // ---------- 2. Удалить ----------
-            case 2: {
+            case 2: {                              // удалить по индексу
                 int idx = readInt("Index to remove: ");
                 arr.remove(idx);
                 break;
             }
-
-            // ---------- 3. Редактировать ----------
-            case 3: {
+            case 3: {                              // редактировать по индексу
                 int idx = readInt("Index to edit: ");
                 Order o;
-                std::cin >> o;
+                cin >> o;
                 arr.edit(idx, o);
                 break;
             }
-
-            // ---------- 4. Показать все ----------
-            case 4:
-                std::cout << "Total: " << arr.getSize() << "\n";
+            case 4:                                // показать все
+                cout << "Total: " << arr.getSize() << "\n";
                 arr.printAll();
                 break;
-
-            // ---------- 5. Сортировка ----------
-            case 5:
+            case 5:                                // сортировка
                 arr.sortByPayerAccount();
                 break;
-
-            // ---------- 6. Сумма по счёту плательщика ----------
-            case 6: {
-                std::string payer;
-                std::cout << "Payer account: ";
-                std::getline(std::cin, payer);
-
-                if (!arr.hasPayer(payer)) {
-                    std::cout << "Account '" << payer << "' not found.\n";
+            case 6: {                              // сумма по счёту
+                string payer;
+                cout << "Payer account: ";
+                getline(cin, payer);               // читаем строку целиком
+                if (!arr.hasPayer(payer)) {        // проверяем, есть ли такой счёт
+                    cout << "Account '" << payer << "' not found.\n";
                 } else {
-                    std::cout << "Total for account '" << payer << "': "
-                              << arr.totalByPayer(payer) << " RUB\n";
+                    cout << "Total for account '" << payer << "': "
+                         << arr.totalByPayer(payer) << " RUB\n";
                 }
                 break;
             }
-
-            // ---------- 7. Файловые/строковые потоки ----------
-            case 7: {
-                std::string fname;
-                std::cout << "File path: ";
-                std::getline(std::cin, fname);
+            case 7: {                              // обработка текстового файла
+                string fname;
+                cout << "File path: ";
+                getline(cin, fname);
                 TextProcessor::processFile(fname);
                 break;
             }
-
-            // ---------- 0. Выход ----------
-            case 0:
-                std::cout << "Exit.\n";
+            case 0:                                // выход
+                cout << "Exit.\n";
                 return 0;
-
             default:
-                std::cout << "Invalid menu item.\n";
+                cout << "Invalid menu item.\n";
             }
         }
-        catch (const InvalidAccountException& e) {
-            std::cout << "Account error: " << e.what() << "\n";
+        catch (const InvalidAccountException& e) { // ошибки данных заказа
+            cout << "Account error: " << e.what() << "\n";
         }
-        catch (const EmptyArrayException& e) {
-            std::cout << "Array error: " << e.what() << "\n";
+        catch (const EmptyArrayException& e) {     // массив пуст
+            cout << "Array error: " << e.what() << "\n";
         }
-        catch (const IndexOutOfRangeException& e) {
-            std::cout << "Index error: " << e.what() << "\n";
+        catch (const IndexOutOfRangeException& e) { // неверный индекс
+            cout << "Index error: " << e.what() << "\n";
         }
-        catch (const FileOpenException& e) {
-            std::cout << "File error: " << e.what() << "\n";
+        catch (const FileOpenException& e) {       // файл не открылся
+            cout << "File error: " << e.what() << "\n";
         }
-        catch (const std::exception& e) {
-            std::cout << "Error: " << e.what() << "\n";
+        catch (const exception& e) {               // прочие std-исключения
+            cout << "Error: " << e.what() << "\n";
         }
     }
     return 0;

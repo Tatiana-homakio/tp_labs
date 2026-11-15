@@ -1,1 +1,23 @@
 Hello, world! How are you? Great; simply great!!! This is a test, check, final.
+
+Wait... Is this real?! Yes, it is (really)! Amazing, isn't it?
+
+One sentence without punctuation at the end
+
+Another one. And here: a colon, a semicolon; and a dash - all together, wow!
+
+Short. Ok! Fine?
+
+   Leading spaces before this sentence.   
+Tabs	and	newlines
+between	words! Do they work?
+
+Ellipsis... dots... everywhere... and more!!!
+
+A sentence with (parentheses), "quotes", and 'apostrophes' - all punctuation marks: . , ! ? ; : - " ' ( ) — should be counted!
+
+Multiple sentences in one line. Each one must be detected! Even this one?
+
+Empty sentences between dots... ... ... are handled?
+
+Final sentence without terminal punctuation
